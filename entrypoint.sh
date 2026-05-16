@@ -47,8 +47,7 @@ init_settings() {
     "ANTHROPIC_REASONING_MODEL": "glm-5.1",
     "ENABLE_TOOL_SEARCH": "true",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "API_TIMEOUT_MS": "3000000",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+    "API_TIMEOUT_MS": "3000000"
   },
   "effortLevel": "high",
   "theme": "dark",
@@ -74,10 +73,7 @@ else
     init_settings
 fi
 
-# Auto-update CLI tools on startup
-echo "Updating CLI tools..."
-npm update -g @anthropic-ai/claude-code opencode-ai 2>/dev/null || echo "Claude Code / OpenCode update skipped"
-npm install -g @openai/codex@latest 2>/dev/null || echo "Codex install skipped"
+claude --version 2>/dev/null || true
 
 echo "Dev container ready"
 exec "$@"

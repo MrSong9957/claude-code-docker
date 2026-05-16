@@ -27,11 +27,16 @@ services:
     image: s7620605/claude-code-opencode:latest
     container_name: dev-container
     user: "0:0"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./your-project:/home/app/project
       - config:/home/app/.claude
     environment:
       - ANTHROPIC_API_KEY=your-key-here
+      - HTTP_PROXY=http://host.docker.internal:7890
+      - HTTPS_PROXY=http://host.docker.internal:7890
+      - NO_PROXY=localhost,127.0.0.1,open.bigmodel.cn,.bigmodel.cn
     stdin_open: true
     tty: true
 

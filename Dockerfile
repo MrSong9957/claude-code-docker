@@ -4,6 +4,9 @@ FROM docker.1ms.run/library/debian:bookworm-slim
 ARG HTTP_PROXY
 ARG HTTPS_PROXY
 
+# Switch to Chinese apt mirror for better connectivity in China
+RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     bash curl git ca-certificates sudo fonts-noto-cjk \
