@@ -28,6 +28,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
+# Bust cache so npm install always pulls latest versions
+ARG CACHEBUST=1
+
 # Install Claude Code, OpenCode and Codex (use npm mirror)
 RUN npm config set registry https://registry.npmmirror.com \
     && npm install -g @anthropic-ai/claude-code@latest opencode-ai @openai/codex

@@ -25,3 +25,5 @@ jobs:
           tags: s7620605/claude-code-opencode:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            CACHEBUST=${{ github.run_id }}
