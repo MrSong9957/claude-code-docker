@@ -1,6 +1,6 @@
 # claude-code-docker
 
-AI 编程工具的开发容器基础镜像，预装 Claude Code、OpenCode 和 Codex。
+AI 编程工具的开发容器基础镜像，预装 Claude Code、OpenCode 和 Codex，默认使用智谱 API。
 
 ## 包含工具
 
@@ -41,18 +41,37 @@ volumes:
 
 启动容器后运行 `claude` 即可开始使用。
 
-## 自动更新
+## 默认配置
 
-镜像通过两种机制保持最新：
+容器首次启动时，`entrypoint.sh` 会自动创建 `settings.json`，默认配置：
 
-1. **容器启动时**：`entrypoint.sh` 自动更新 Claude Code 和 OpenCode，并安装最新版 Codex
-2. **每周自动构建**：GitHub Actions 每周一自动重建镜像并推送到 Docker Hub
+- **API 地址**：`open.bigmodel.cn/api/anthropic`（智谱 API）
+- **模型映射**：glm-5-turbo（日常）、glm-5.1（推理）
+- 已跳过 Claude Code 引导流程
 
-所以即使忘记拉取新镜像，容器启动时工具也会是最新版。
+如需自定义配置，挂载你的 `settings.json` 到 `/home/app/.claude/settings.json` 即可覆盖。
+
+## 更新工具
+
+### 本地更新（Windows）
+
+运行项目中的 `update.ps1`，它会启动临时容器、更新工具并提交为新镜像：
+
+```powershell
+.\update.ps1
+```
+
+更新完成后，各项目执行以下命令应用：
+
+```bash
+docker compose up -d --force-recreate
+```
+
+### 每周自动构建
+
+GitHub Actions 每周一自动重建镜像并推送到 Docker Hub，也可在 Actions 页面手动触发。
 
 ## 手动构建
-
-如果需要本地修改并推送：
 
 ```bash
 docker build -t s7620605/claude-code-opencode:latest .
@@ -63,8 +82,9 @@ docker push s7620605/claude-code-opencode:latest
 
 ```
 .
-├── Dockerfile                    # 镜像构建文件
-├── entrypoint.sh                 # 容器入口脚本（初始化配置 + 自动更新）
+├── Dockerfile                         # 镜像构建文件
+├── entrypoint.sh                      # 容器入口脚本（配置恢复 + 初始化设置）
+├── update.ps1                         # 本地更新工具（Windows PowerShell）
 ├── .github/workflows/build-image.yml  # 每周自动构建
 └── README.md
 ```
